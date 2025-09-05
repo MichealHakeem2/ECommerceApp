@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ECommerceApp.Application\ECommerceApp.Application\ECommerceApp.Application.csproj" />
+    <ProjectReference Include="..\..\ECommerceApp.Core\ECommerceApp.Core\ECommerceApp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\Downloads\Video\Guna UI and MySQL DLL Files\Guna UI and MySQL DLL Files\vsMsql connector\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.VisualStudio">
+      <HintPath>..\..\..\..\Downloads\Video\Guna UI and MySQL DLL Files\Guna UI and MySQL DLL Files\vsMsql connector\MySql.VisualStudio.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

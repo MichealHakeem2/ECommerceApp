@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+<h1>Welcome to E-Commerce App</h1>
+<p>Browse products and start shopping!</p>
+
+<div class="row">
+    @foreach (var product in Model as IEnumerable<ECommerceApp.Core.Entities.Product>)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">$@product.Price</p>
+                    <a href="/Product/Details/@product.ProductId" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

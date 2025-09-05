@@ -1,0 +1,10 @@
+﻿@model IEnumerable<ECommerceApp.Core.Entities.Category>
+<h2>Categories</h2>
+<ul class="list-group">
+    @foreach (var category in Model)
+    {
+        <li class="list-group-item">
+            <a href="/Product/ByCategory/@category.CategoryId">@category.Name</a>
+        </li>
+    }
+</ul>
