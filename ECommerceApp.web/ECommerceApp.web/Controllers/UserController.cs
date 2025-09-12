@@ -1,6 +1,9 @@
 ﻿using ECommerceApp.Application.Services;
 using ECommerceApp.Web.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ECommerceApp.Web.Controllers
@@ -41,13 +44,24 @@ namespace ECommerceApp.Web.Controllers
                 return View(model);
             }
 
-            HttpContext.Session.SetInt32("UserId", user.UserId);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Remove("UserId");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
     }

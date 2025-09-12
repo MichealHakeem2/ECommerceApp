@@ -54,6 +54,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -120,6 +130,12 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -197,6 +213,10 @@
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.8, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
             }
           },
           "imports": [

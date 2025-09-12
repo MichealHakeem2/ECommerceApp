@@ -2,6 +2,8 @@
 using ECommerceApp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ECommerceApp.Application.Services
@@ -14,20 +16,29 @@ namespace ECommerceApp.Application.Services
         {
             _userRepository = userRepository;
         }
+
         public async Task<User?> ValidateUserAsync(string email, string password)
         {
             var user = await _userRepository.GetByEmailAsync(email);
             if (user == null) return null;
-            return user.Password == password ? user : null; 
+
+            var hashedPassword = HashPassword(password);
+            return user.Password == hashedPassword ? user : null;
         }
+
         public async Task RegisterUserAsync(string fullName, string email, string password)
         {
+            var existingUser = await _userRepository.GetByEmailAsync(email);
+            if (existingUser != null) return;
+
+            var hashedPassword = HashPassword(password);
+
             var user = new User
             {
                 FullName = fullName,
                 Email = email,
-                Password = password,
-                Role = "customer",
+                Password = hashedPassword,
+                Role = "Customer",
                 CreatedAt = DateTime.Now
             };
 
@@ -39,9 +50,18 @@ namespace ECommerceApp.Application.Services
         {
             return await _userRepository.GetByEmailAsync(email);
         }
+
         public async Task<IEnumerable<User>> GetAdminsAsync()
         {
             return await _userRepository.GetAdminsAsync();
+        }
+
+        private string HashPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
         }
     }
 }

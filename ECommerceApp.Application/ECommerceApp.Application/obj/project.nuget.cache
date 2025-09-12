@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "RJrDomj6FCY=",
+  "dgSpecHash": "oMACWRX4nXA=",
   "success": true,
   "projectFilePath": "C:\\Users\\12017\\source\\repos\\ECommerceApp\\ECommerceApp.Application\\ECommerceApp.Application\\ECommerceApp.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.9\\microsoft.extensions.configuration.9.0.9.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.9\\microsoft.extensions.configuration.abstractions.9.0.9.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.9\\microsoft.extensions.primitives.9.0.9.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.14.0\\microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.identitymodel.logging\\8.14.0\\microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.14.0\\microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
+    "C:\\Users\\12017\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.14.0\\system.identitymodel.tokens.jwt.8.14.0.nupkg.sha512"
+  ],
   "logs": []
 }
