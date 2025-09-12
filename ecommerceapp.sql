@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 04, 2025 at 07:10 PM
+-- Generation Time: Sep 12, 2025 at 11:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,14 +28,27 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `addresses` (
-  `address_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `street` varchar(255) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `state` varchar(100) NOT NULL,
-  `postal_code` varchar(20) NOT NULL,
-  `country` varchar(100) NOT NULL,
-  `is_default` tinyint(1) DEFAULT 0
+  `AddressId` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `Street` varchar(255) NOT NULL,
+  `City` varchar(100) NOT NULL,
+  `State` varchar(100) NOT NULL,
+  `PostalCode` varchar(20) NOT NULL,
+  `Country` varchar(100) NOT NULL,
+  `IsDefault` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cartitems`
+--
+
+CREATE TABLE `cartitems` (
+  `CartItemId` int(11) NOT NULL,
+  `CartId` int(11) NOT NULL,
+  `ProductId` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -45,22 +58,9 @@ CREATE TABLE `addresses` (
 --
 
 CREATE TABLE `carts` (
-  `cart_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cart_items`
---
-
-CREATE TABLE `cart_items` (
-  `cart_item_id` int(11) NOT NULL,
-  `cart_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL
+  `CartId` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `CreatedAt` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -70,9 +70,23 @@ CREATE TABLE `cart_items` (
 --
 
 CREATE TABLE `categories` (
-  `category_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `parent_id` int(11) DEFAULT NULL
+  `CategoryId` int(11) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `ParentId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orderitems`
+--
+
+CREATE TABLE `orderitems` (
+  `OrderItemId` int(11) NOT NULL,
+  `OrderId` int(11) NOT NULL,
+  `ProductId` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL,
+  `UnitPrice` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -82,26 +96,12 @@ CREATE TABLE `categories` (
 --
 
 CREATE TABLE `orders` (
-  `order_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `address_id` int(11) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
-  `total_amount` decimal(10,2) NOT NULL,
-  `status` enum('pending','paid','shipped','completed','cancelled') DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `order_items`
---
-
-CREATE TABLE `order_items` (
-  `order_item_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL
+  `OrderId` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `AddressId` int(11) NOT NULL,
+  `OrderDate` datetime DEFAULT current_timestamp(),
+  `TotalAmount` decimal(10,2) NOT NULL,
+  `Status` enum('pending','paid','shipped','completed','cancelled') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -111,12 +111,12 @@ CREATE TABLE `order_items` (
 --
 
 CREATE TABLE `payments` (
-  `payment_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `method` enum('credit_card','debit_card','paypal','bank_transfer','cash_on_delivery') NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `status` enum('pending','completed','failed','refunded') DEFAULT 'pending',
-  `transaction_date` datetime DEFAULT current_timestamp()
+  `PaymentId` int(11) NOT NULL,
+  `OrderId` int(11) NOT NULL,
+  `Method` enum('credit_card','debit_card','paypal','bank_transfer','cash_on_delivery') NOT NULL,
+  `Amount` decimal(10,2) NOT NULL,
+  `Status` enum('pending','completed','failed','refunded') DEFAULT 'pending',
+  `TransactionDate` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -126,14 +126,14 @@ CREATE TABLE `payments` (
 --
 
 CREATE TABLE `products` (
-  `product_id` int(11) NOT NULL,
-  `name` varchar(150) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `stock_quantity` int(11) DEFAULT 0,
-  `image_url` varchar(255) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `ProductId` int(11) NOT NULL,
+  `Name` varchar(150) NOT NULL,
+  `Description` text DEFAULT NULL,
+  `Price` decimal(10,2) NOT NULL,
+  `StockQuantity` int(11) DEFAULT 0,
+  `ImageUrl` varchar(255) DEFAULT NULL,
+  `CategoryId` int(11) DEFAULT NULL,
+  `CreatedAt` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -143,12 +143,12 @@ CREATE TABLE `products` (
 --
 
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `full_name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `role` enum('customer','admin') DEFAULT 'customer',
-  `created_at` datetime DEFAULT current_timestamp()
+  `UserId` int(11) NOT NULL,
+  `FullName` varchar(100) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Password` varchar(255) NOT NULL,
+  `Role` enum('customer','admin') DEFAULT 'customer',
+  `CreatedAt` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -159,67 +159,67 @@ CREATE TABLE `users` (
 -- Indexes for table `addresses`
 --
 ALTER TABLE `addresses`
-  ADD PRIMARY KEY (`address_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`AddressId`),
+  ADD KEY `idx_user_id` (`UserId`);
+
+--
+-- Indexes for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  ADD PRIMARY KEY (`CartItemId`),
+  ADD KEY `idx_cart_id` (`CartId`),
+  ADD KEY `idx_product_id` (`ProductId`);
 
 --
 -- Indexes for table `carts`
 --
 ALTER TABLE `carts`
-  ADD PRIMARY KEY (`cart_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `cart_items`
---
-ALTER TABLE `cart_items`
-  ADD PRIMARY KEY (`cart_item_id`),
-  ADD KEY `cart_id` (`cart_id`),
-  ADD KEY `product_id` (`product_id`);
+  ADD PRIMARY KEY (`CartId`),
+  ADD KEY `idx_user_id` (`UserId`);
 
 --
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`category_id`),
-  ADD KEY `parent_id` (`parent_id`);
+  ADD PRIMARY KEY (`CategoryId`),
+  ADD KEY `idx_parent_id` (`ParentId`);
+
+--
+-- Indexes for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  ADD PRIMARY KEY (`OrderItemId`),
+  ADD KEY `idx_order_id` (`OrderId`),
+  ADD KEY `idx_product_id` (`ProductId`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `address_id` (`address_id`);
-
---
--- Indexes for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`order_item_id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `product_id` (`product_id`);
+  ADD PRIMARY KEY (`OrderId`),
+  ADD KEY `idx_user_id` (`UserId`),
+  ADD KEY `idx_address_id` (`AddressId`);
 
 --
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD PRIMARY KEY (`PaymentId`),
+  ADD KEY `idx_order_id` (`OrderId`);
 
 --
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`product_id`),
-  ADD KEY `category_id` (`category_id`);
+  ADD PRIMARY KEY (`ProductId`),
+  ADD KEY `idx_category_id` (`CategoryId`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`UserId`),
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -229,55 +229,55 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `AddressId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  MODIFY `CartItemId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cart_items`
---
-ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `CartId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  MODIFY `OrderItemId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `OrderId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `PaymentId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -287,52 +287,52 @@ ALTER TABLE `users`
 -- Constraints for table `addresses`
 --
 ALTER TABLE `addresses`
-  ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `fk_addresses_user` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+
+--
+-- Constraints for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  ADD CONSTRAINT `fk_cartitems_cart` FOREIGN KEY (`CartId`) REFERENCES `carts` (`CartId`),
+  ADD CONSTRAINT `fk_cartitems_product` FOREIGN KEY (`ProductId`) REFERENCES `products` (`ProductId`);
 
 --
 -- Constraints for table `carts`
 --
 ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-
---
--- Constraints for table `cart_items`
---
-ALTER TABLE `cart_items`
-  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`cart_id`),
-  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+  ADD CONSTRAINT `fk_carts_user` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
 
 --
 -- Constraints for table `categories`
 --
 ALTER TABLE `categories`
-  ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`category_id`);
+  ADD CONSTRAINT `fk_categories_parent` FOREIGN KEY (`ParentId`) REFERENCES `categories` (`CategoryId`);
+
+--
+-- Constraints for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  ADD CONSTRAINT `fk_orderitems_order` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`),
+  ADD CONSTRAINT `fk_orderitems_product` FOREIGN KEY (`ProductId`) REFERENCES `products` (`ProductId`);
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`address_id`);
-
---
--- Constraints for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+  ADD CONSTRAINT `fk_orders_address` FOREIGN KEY (`AddressId`) REFERENCES `addresses` (`AddressId`),
+  ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
 
 --
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
+  ADD CONSTRAINT `fk_payments_order` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`);
 
 --
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
+  ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`CategoryId`) REFERENCES `categories` (`CategoryId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

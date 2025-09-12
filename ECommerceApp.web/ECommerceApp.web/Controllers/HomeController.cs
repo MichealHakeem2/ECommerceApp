@@ -17,24 +17,20 @@ namespace ECommerceApp.Web.Controllers
             _categoryService = categoryService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            // Get all products
-            var products = await _productService.GetAllProductsAsync();
-
-            // Get all categories
-            var categories = await _categoryService.GetAllCategoriesAsync();
-
-            // Pass categories to ViewBag (or ViewModel)
-            ViewBag.Categories = categories;
-
-            // Return products to the view
-            return View(products);
-        }
-
         public IActionResult Privacy()
         {
             return View();
+        }
+        public async Task<IActionResult> Index(int? categoryId)
+        {
+            var products = categoryId.HasValue
+                ? await _productService.GetProductsByCategoryAsync(categoryId.Value)
+                : await _productService.GetAllProductsAsync();
+
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            ViewBag.Categories = categories;
+
+            return View(products);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

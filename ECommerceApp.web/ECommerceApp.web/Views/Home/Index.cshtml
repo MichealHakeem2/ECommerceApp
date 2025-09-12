@@ -1,21 +1,46 @@
-﻿@{
+﻿@model IEnumerable<ECommerceApp.Core.Entities.Product>
+
+@{
     ViewData["Title"] = "Home";
+    var categories = ViewBag.Categories as IEnumerable<ECommerceApp.Core.Entities.Category>;
 }
-<h1>Welcome to E-Commerce App</h1>
-<p>Browse products and start shopping!</p>
 
 <div class="row">
-    @foreach (var product in Model as IEnumerable<ECommerceApp.Core.Entities.Product>)
-    {
-        <div class="col-md-3 mb-3">
-            <div class="card">
-                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name">
-                <div class="card-body">
-                    <h5 class="card-title">@product.Name</h5>
-                    <p class="card-text">$@product.Price</p>
-                    <a href="/Product/Details/@product.ProductId" class="btn btn-primary">View</a>
+    <!-- Categories Sidebar -->
+    <div class="col-md-3">
+        <h4>Categories</h4>
+        <ul class="list-group">
+            @foreach (var category in categories)
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId">
+                        @category.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Products -->
+    <div class="col-md-9">
+        <h2>Products</h2>
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p>@product.Description</p>
+                            <p><strong>Price:</strong> $@product.Price</p>
+                            <a asp-controller="Cart" asp-action="Add" asp-route-id="@product.ProductId" class="btn btn-primary">
+                                Add to Cart
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    }
+    </div>
 </div>
