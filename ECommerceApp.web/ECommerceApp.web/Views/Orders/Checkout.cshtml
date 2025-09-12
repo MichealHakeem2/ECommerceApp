@@ -1,0 +1,35 @@
+﻿@model ECommerceApp.Core.Entities.Cart
+<h2>Checkout</h2>
+@if (Model == null || !Model.CartItems.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <h4>Order Summary</h4>
+    <ul>
+        @foreach (var item in Model.CartItems)
+        {
+            <li>@item.Product.Name x @item.Quantity = $@(item.Quantity* item.Product.Price)</li>
+        }
+    </ul>
+    <p>Total: $@Model.CartItems.Sum(i => i.Quantity * i.Product.Price)</p>
+
+    <form method="post" action="/Order/PlaceOrder">
+        <div class="mb-3">
+            <label for="AddressId" class="form-label">Shipping Address</label>
+            <select name="AddressId" class="form-select">
+                <option value="1">Default Address</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="PaymentMethod" class="form-label">Payment Method</label>
+            <select name="PaymentMethod" class="form-select">
+                <option value="credit_card">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="cash_on_delivery">Cash on Delivery</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
+}
